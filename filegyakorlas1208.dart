@@ -6,10 +6,26 @@ void main(){
   //harmadikVersszak(vers);
   List<String> students = fileOlvaso('students_en.csv');
   fizikasok(students);
+  addStudent('students_en.csv', 'Adam', 'Sandler', 'adam@sandler.com', '12B', 'Mobile development');
+  addStudent('students_en.csv', 'Luke', 'Lucky', 'Luke@lucky.com', '12B', 'Mobile development');
+}
+
+void addStudent(filename, fname, lname, email, clas, subject) {
+  String ujsor = [fname, lname, email, clas, subject].join(';');
+  File file = File(filename);
+  file.writeAsString('\n' + ujsor, mode: FileMode.append);
 }
 
 void fizikasok(tanulok) {
-  
+  int lname = 0;
+  int fname = 1;
+  int subject = 4;
+  for (String sor in tanulok) {
+    List<String> tanulo = sor.split(';');
+    if (tanulo.last == 'Physics'){
+      print(tanulo[fname] + ' ' + tanulo[lname]);
+    }
+  }
 }
 
 void harmadikVersszak(List<String> sorok) {
@@ -17,7 +33,7 @@ void harmadikVersszak(List<String> sorok) {
   for (var sor in sorok) {
     if (sor.isEmpty) {
       hanyadikSor++;
-      if (hanyadiksor == 4) {
+      if (hanyadikSor == 4) {
         break;
       }
     }
