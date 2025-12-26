@@ -1,43 +1,61 @@
 import "dart:io";
 
-void main(){
+void main() {
   List<String> vers = fileOlvaso('vers.txt');
-  //versKiiratas(vers);
-  //harmadikVersszak(vers);
+  // versKiiratas(vers);
+  // harmadikVersszak(vers);
+
   List<String> students = fileOlvaso('students_en.csv');
   fizikasok(students);
+
   // addStudent('students_en.csv', 'Adam', 'Sandler', 'adam@sandler.com', '12B', 'Mobile development');
   // addStudent('students_en.csv', 'Luke', 'Lucky', 'Luke@lucky.com', '12B', 'Mobile development');
+
   Map<String, List<String>> osztalyok = osztalyokszerint(students);
+  print(osztalyok);
 }
 
- Map<String, List<String>> osztalyok = osztalyokszerint(tanulok) {
-  Map<String> tanulo = sor.split(';')
+// JAVÍTVA: A függvénynek kell egy visszatérési típus és egy rendes törzs
+Map<String, List<String>> osztalyokszerint(List<String> tanulok) {
+  Map<String, List<String>> eredmeny = {}; // Ebbe gyűjtjük az adatokat
+
   int lname = 0;
   int fname = 1;
   int clas = 3;
+
   for (String sor in tanulok) {
     List<String> tanulo = sor.split(';');
-    if (tanulo.last == 'Physics'){
-      print(tanulo[fname] + ' ' + tanulo[lname]);
+
+    // Ellenőrizzük, hogy a sor nem üres-e
+    if (tanulo.length > 3) {
+      String osztalyNev = tanulo[clas];
+      String teljesNev = "${tanulo[fname]} ${tanulo[lname]}";
+
+      // Ha az osztály még nincs benne a Map-ben, létrehozzuk a listáját
+      if (!eredmeny.containsKey(osztalyNev)) {
+        eredmeny[osztalyNev] = [];
+      }
+      // Hozzáadjuk a tanulót az osztály listájához
+      eredmeny[osztalyNev]!.add(teljesNev);
     }
-
- }
-
+  }
+  return eredmeny;
+}
 
 void addStudent(filename, fname, lname, email, clas, subject) {
   String ujsor = [fname, lname, email, clas, subject].join(';');
   File file = File(filename);
-  file.writeAsString('\n' + ujsor, mode: FileMode.append);
+  // A Sync verzió biztosabb konzolos környezetben
+  file.writeAsStringSync('\n' + ujsor, mode: FileMode.append);
 }
 
 void fizikasok(tanulok) {
   int lname = 0;
   int fname = 1;
-  int subject = 4;
+  // int subject = 4; // Ez az órai kódban szerepelt
   for (String sor in tanulok) {
     List<String> tanulo = sor.split(';');
-    if (tanulo.last == 'Physics'){
+    if (tanulo.isNotEmpty && tanulo.last == 'Physics') {
       print(tanulo[fname] + ' ' + tanulo[lname]);
     }
   }
@@ -60,9 +78,11 @@ void versKiiratas(sorok) {
     print(sor);
   }
 }
+
 List<String> fileOlvaso(fileName) {
-  List<String> tartalom = [];
   File file = File(fileName);
-  tartalom = file.readAsLinesSync();
-  return tartalom;
+  if (file.existsSync()) {
+    return file.readAsLinesSync();
+  }
+  return [];
 }
