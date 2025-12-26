@@ -29,19 +29,27 @@ void printContent(String content) {
   List<String> men = [];
 
   for (var line in lines) {
-    if (line.trim().isEmpty) continue; // Üres sorok átugrása
+    // Felbontjuk a sort vesszők mentén: [Név, Kor, Nem, Magasság]
+    List<String> parts = line.split(',');
 
-    // Feltételezve, hogy a sor végén szerepel a "nő" vagy "férfi" szó
-    if (line.toLowerCase().contains('nő')) {
-      women.add(line);
-    } else if (line.toLowerCase().contains('férfi')) {
-      men.add(line);
+    if (parts.length >= 3) {
+      String gender = parts[2].trim().toLowerCase();
+
+      if (gender == 'female') {
+        women.add(line);
+      } else if (gender == 'male') {
+        men.add(line);
+      }
     }
   }
+  // Először a nők, utána a férfiak kiírása
+  print('--- Nők (Females) ---');
+  for (var person in women) {
+    print(person.trim());
+  }
 
-  print('--- Nők ---');
-  women.forEach((p) => print(p));
-
-  print('\n--- Férfiak ---');
-  men.forEach((p) => print(p));
+  print('\n--- Férfiak (Males) ---');
+  for (var person in men) {
+    print(person.trim());
+  }
 }
