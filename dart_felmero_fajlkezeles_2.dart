@@ -22,11 +22,11 @@ void createFile(String fileName) {
 void deleteFile(String fileName) {
   File file = File(fileName);
 
-  // Előbb megnézzük, létezik-e a fájl
+  // Előbb megnézem, létezik-e a fájl
   if (file.existsSync()) {
     file.deleteSync(); // Törlés
 
-    // Ellenőrizzük, hogy tényleg eltűnt-e
+    // Ellenőrzöm, hogy tényleg eltűnt-e
     if (!file.existsSync()) {
       print('A(z) $fileName törlése sikeres volt.');
     } else {
